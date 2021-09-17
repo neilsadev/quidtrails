@@ -23,6 +23,15 @@ class DBProvider {
     if (_database != null) return _database!;
 
     _database = await _initDB();
+    // Set default value to the User Table row.
+    _database!.insert(K.tableNameUser, {
+      K.colNameUser["currency"]!: "\$",
+      K.colNameUser["currencyMode"]!: 1,
+    });
+    // Set default value to the Sync Table row
+    _database!.insert(K.tableNameDBSync, {
+      K.colNameDBSync["localTs"]!: DateTime.now().millisecondsSinceEpoch,
+    });
     return _database!;
   }
 
@@ -32,10 +41,10 @@ class DBProvider {
     return await openDatabase(join(await getDatabasesPath(), 'quidtrails.db'),
         onCreate: (db, version) async {
       await db.execute('''CREATE TABLE ${K.tableNameUser} (
-          ${K.colNameUser["name"]} TEXT NOT NULL,
+          ${K.colNameUser["name"]} TEXT,
           ${K.colNameUser["currency"]} TEXT NOT NULL,
           ${K.colNameUser["currencyMode"]} INTEGER NOT NULL,
-          ${K.colNameUser["image"]} TEXT NOT NULL,
+          ${K.colNameUser["image"]} TEXT,
           ${K.colNameUser["remoteUID"]} TEXT
         )''');
       await db.execute('''CREATE TABLE ${K.tableNameExp} (
@@ -62,9 +71,10 @@ class DBProvider {
     return await db.insert(tableName, row);
   }
 
-  Future update(String tableName, Map<String, dynamic> row) async {
+  Future<int> update(String tableName, Map<String, dynamic> row,
+      {String? where, List<Object?>? whereArgs}) async {
     Database db = await instance.database;
-    return await db.update(tableName, row);
+    return await db.update(tableName, row, where: where, whereArgs: whereArgs);
   }
 
   // this function query all data from table that's name passed as a argument
