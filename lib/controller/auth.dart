@@ -24,7 +24,7 @@ class Auth {
       return await FirebaseAuth.instance.signInWithCredential(credential);
     }
 
-    // if sign in is unsuccessful, return null
+    // if sign in is unsuccessful, return null.
     return null;
   }
 }
