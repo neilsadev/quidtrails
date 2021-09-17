@@ -12,7 +12,7 @@ class User extends ChangeNotifier {
   String? currency;
   int? currencyMode;
 
-  signInWithGoogle() async {
+  Future<bool> signInWithGoogle() async {
     UserCredential? userCredential = await Auth().signInWithGoogle();
     if (userCredential != null) {
       userName ??= userCredential.user?.displayName;
@@ -22,6 +22,8 @@ class User extends ChangeNotifier {
         image = await Network()
             .loadNetworkImage(Uri.tryParse(userCredential.user!.photoURL!));
       }
+      return true;
     }
+    return false;
   }
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:quidtrails/model/user.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static const String id = "welcome_screen";
@@ -23,10 +25,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 child: Image.asset("assets/images/logo_big.png"),
               ),
               Padding(
-                padding: EdgeInsets.only(left: 50, right: 50, top: 50),
+                padding: const EdgeInsets.only(left: 50, right: 50, top: 50),
                 child: MaterialButton(
-                  onPressed: () {
-                    print("Google Sign In");
+                  onPressed: () async {
+                    bool status =
+                        await Provider.of<User>(context, listen: false)
+                            .signInWithGoogle();
+                    print(Provider.of<User>(context, listen: false).userName);
+                    print(Provider.of<User>(context, listen: false).userEmail);
+                    print(Provider.of<User>(context, listen: false).userUID);
                   },
                   color: Colors.white,
                   elevation: 5,

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:quidtrails/model/data.dart';
 import 'package:quidtrails/view/home_screen.dart';
 import 'package:quidtrails/view/welcome_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'model/user.dart';
 
@@ -13,10 +14,27 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  int? counter;
+
+  @override
+  void initState() {
+    getPrefs();
+    super.initState();
+  }
+
+  getPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    counter = (prefs.getInt('counter') ?? 0);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -29,7 +47,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        initialRoute: WelcomeScreen.id,
+        initialRoute: counter == 0 ? WelcomeScreen.id : HomeScreen.id,
         routes: {
           HomeScreen.id: (context) => const HomeScreen(),
           WelcomeScreen.id: (context) => const WelcomeScreen(),
