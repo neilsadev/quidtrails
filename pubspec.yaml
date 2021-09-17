@@ -38,6 +38,7 @@ dependencies:
   firebase_core: ^1.6.0
   http: ^0.13.3
   shared_preferences: ^2.0.7
+  animated_splash_screen: ^1.1.0
 
 dev_dependencies:
   flutter_native_splash: ^1.2.3
@@ -92,4 +93,4 @@ flutter:
 
 flutter_native_splash:
   color: "#6B50A0"
-  image: "assets/images/while_logo.png"
+  image: "assets/images/white_logo.png"

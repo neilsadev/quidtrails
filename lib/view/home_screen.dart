@@ -14,7 +14,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: SafeArea(
         child: Center(
-          child: Text("Quidtrails"),
+          child: Text("Quidtrails Bro"),
         ),
       ),
     );
