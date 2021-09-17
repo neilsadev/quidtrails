@@ -1,12 +1,11 @@
 import 'package:flutter/foundation.dart';
 
 class Data extends ChangeNotifier {
-  int? _number;
+  int? _localTs;
+  int? _dbTs;
 
-  int? get number => _number;
+  int? get localTs => _localTs;
+  int? get dbTs => _dbTs;
 
-  setNumber(int number) {
-    _number = number;
-    notifyListeners();
-  }
+  updateLocalTimeStamp() async {}
 }

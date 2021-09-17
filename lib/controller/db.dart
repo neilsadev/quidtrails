@@ -34,7 +34,7 @@ class DBProvider {
       await db.execute('''CREATE TABLE ${K.tableNameUser} (
           ${K.colNameUser["name"]} TEXT NOT NULL,
           ${K.colNameUser["currency"]} TEXT NOT NULL,
-          ${K.colNameUser["currencyMode"]} TEXT NOT NULL,
+          ${K.colNameUser["currencyMode"]} INTEGER NOT NULL,
           ${K.colNameUser["image"]} TEXT NOT NULL,
           ${K.colNameUser["remoteUID"]} TEXT
         )''');
@@ -51,7 +51,7 @@ class DBProvider {
         )''');
       await db.execute('''CREATE TABLE ${K.tableNameDBSync} (
           ${K.colNameDBSync["localTs"]} INTEGER NOT NULL,
-          ${K.colNameDBSync["dbTs"]} INTEGER NOT NULL
+          ${K.colNameDBSync["dbTs"]} INTEGER
         )''');
     }, version: 1);
   }
@@ -60,6 +60,11 @@ class DBProvider {
   Future<int> insert(String tableName, Map<String, dynamic> row) async {
     Database db = await instance.database;
     return await db.insert(tableName, row);
+  }
+
+  Future update(String tableName, Map<String, dynamic> row) async {
+    Database db = await instance.database;
+    return await db.update(tableName, row);
   }
 
   // this function query all data from table that's name passed as a argument
