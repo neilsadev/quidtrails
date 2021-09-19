@@ -22,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return AnimatedSplashScreen.withScreenFunction(
-      splash: 'images/splash.png',
+      splash: 'assets/images/app_logo.png',
       screenFunction: () async {
         int counter = await getPrefs();
         return counter == 0 ? const WelcomeScreen() : const HomeScreen();

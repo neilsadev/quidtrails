@@ -26,13 +26,19 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider(create: (_) => User()),
-        Provider(create: (_) => Data()),
+        ChangeNotifierProvider<User>(create: (_) => User()),
+        ChangeNotifierProvider<Data>(create: (_) => Data()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.deepPurple,
+          appBarTheme: const AppBarTheme(
+              backgroundColor: Colors.white,
+              shadowColor: Colors.transparent,
+              titleTextStyle: TextStyle(
+                color: Colors.black,
+              )),
         ),
         initialRoute: SplashScreen.id,
         routes: {
