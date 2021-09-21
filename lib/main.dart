@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quidtrails/model/data.dart';
+import 'package:quidtrails/view/add_expense.dart';
 import 'package:quidtrails/view/home_screen.dart';
 import 'package:quidtrails/view/splash_screen.dart';
 import 'package:quidtrails/view/welcome_screen.dart';
@@ -34,17 +35,22 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(
           primarySwatch: Colors.deepPurple,
           appBarTheme: const AppBarTheme(
-              backgroundColor: Colors.white,
-              shadowColor: Colors.transparent,
-              titleTextStyle: TextStyle(
-                color: Colors.black,
-              )),
+            backgroundColor: Colors.white,
+            shadowColor: Colors.transparent,
+            titleTextStyle: TextStyle(
+              fontFamily: "Railway",
+              fontWeight: FontWeight.w700,
+              color: Colors.black,
+            ),
+          ),
+          fontFamily: "Railway",
         ),
         initialRoute: SplashScreen.id,
         routes: {
           SplashScreen.id: (context) => const SplashScreen(),
-          HomeScreen.id: (context) => const HomeScreen(),
           WelcomeScreen.id: (context) => const WelcomeScreen(),
+          HomeScreen.id: (context) => const HomeScreen(),
+          AddExpense.id: (context) => const AddExpense(),
         },
       ),
     );

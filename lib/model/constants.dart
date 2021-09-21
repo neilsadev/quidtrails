@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 class K {
   // Table constants for sqlite
 
@@ -81,4 +83,8 @@ class K {
     "localTs": "local_ts",
     "dbTs": "db_ts",
   };
+
+  // Colors
+  static const Color black = Color(0xFF171717);
+  static const Color purple = Color(0xFF6B50A0);
 }
