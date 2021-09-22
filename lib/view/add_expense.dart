@@ -17,6 +17,7 @@ class AddExpense extends StatefulWidget {
 
 class _AddExpenseState extends State<AddExpense> {
   String? dropdownValue;
+  List<String> expenseFor = K.expenseFor;
 
   @override
   Widget build(BuildContext context) {
@@ -56,15 +57,12 @@ class _AddExpenseState extends State<AddExpense> {
                   isExpanded: true,
                   hint: const Text("Expenses Made For"),
                   value: dropdownValue,
-                  items: const <DropdownMenuItem<String>>[
-                    DropdownMenuItem(
-                      value: 'Option 1',
-                      child: Text('Option 1'),
-                    ),
-                    DropdownMenuItem(
-                      value: 'Option 2',
-                      child: Text('Option 2'),
-                    ),
+                  items: <DropdownMenuItem<String>>[
+                    for (String val in expenseFor)
+                      DropdownMenuItem(
+                        value: val,
+                        child: Text(val),
+                      )
                   ],
                   onChanged: (value) {
                     setState(() {

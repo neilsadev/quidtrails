@@ -86,4 +86,18 @@ class K {
   // Colors
   static const Color black = Color(0xFF171717);
   static const Color purple = Color(0xFF6B50A0);
+
+  // Choices of Expense
+  static const List<String> expenseFor = [
+    "Food",
+    "Travel",
+    "Appliances",
+    "Bills",
+    "Insurances",
+    "Entertainment",
+    "Medical",
+    "Upkeep",
+    "Gift",
+    "Other"
+  ];
 }
