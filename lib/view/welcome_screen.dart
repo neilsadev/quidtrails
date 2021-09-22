@@ -1,6 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quidtrails/controller/db.dart';
 import 'package:quidtrails/model/user.dart';
+
+import 'package:quidtrails/model/constants.dart';
+import 'package:quidtrails/view/home_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static const String id = "welcome_screen";
@@ -11,6 +17,8 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
+  final _dbProvider = DBProvider.instance;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,18 +30,26 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 50.0),
-                child: Image.asset("assets/images/logo_big.png"),
+                child: Image.asset("assets/images/big_logo.png"),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 50, right: 50, top: 50),
+                padding: const EdgeInsets.only(left: 40, right: 40, top: 50),
                 child: MaterialButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
                   onPressed: () async {
                     bool status =
                         await Provider.of<User>(context, listen: false)
                             .signInWithGoogle();
-                    print(Provider.of<User>(context, listen: false).userName);
-                    print(Provider.of<User>(context, listen: false).userEmail);
-                    print(Provider.of<User>(context, listen: false).userUID);
+                    if (status == true) {
+                      Map<String, dynamic> row = {
+                        K.colNameUser["name"]!:
+                            Provider.of<User>(context, listen: false).userName,
+                      };
+                      await _dbProvider.update(K.tableNameUser, row);
+                      Navigator.popAndPushNamed(context, HomeScreen.id);
+                    }
                   },
                   color: Colors.white,
                   elevation: 5,
@@ -41,17 +57,27 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.all(5.0),
+                        padding: const EdgeInsets.all(10.0),
                         child: Image.asset(
-                          "assets/images/small_logo.png",
+                          "assets/images/google_logo.png",
+                          width: 40,
                         ),
                       ),
-                      Text("Sign in with Google"),
-                      SizedBox(),
+                      const Text(
+                        "Sign in with Google",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(),
                     ],
                   ),
                 ),
-              )
+              ),
+              TextButton(
+                onPressed: () {},
+                child: const Text("continue without signing in"),
+              ),
             ],
           ),
         ),
