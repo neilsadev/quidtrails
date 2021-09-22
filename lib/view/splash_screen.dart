@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quidtrails/controller/db.dart';
 import 'package:quidtrails/model/data.dart';
+import 'package:quidtrails/model/user.dart';
 import 'package:quidtrails/view/home_screen.dart';
 import 'package:quidtrails/view/welcome_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,6 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
       splash: 'assets/images/app_logo.png',
       screenFunction: () async {
         int counter = await getPrefs();
+        await Provider.of<User>(context, listen: false).fetchUserDataFromDB();
         await Provider.of<Data>(context, listen: false).fetchExpenseTableData();
         return counter == 0 ? const WelcomeScreen() : const HomeScreen();
       },

@@ -36,6 +36,7 @@ class _MyAppState extends State<MyApp> {
           primarySwatch: Colors.deepPurple,
           appBarTheme: const AppBarTheme(
             backgroundColor: Colors.white,
+            foregroundColor: Colors.black,
             shadowColor: Colors.transparent,
             titleTextStyle: TextStyle(
               fontFamily: "Railway",

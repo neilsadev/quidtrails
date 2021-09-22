@@ -50,7 +50,6 @@ class DBProvider {
           ${K.colNameUser["name"]} TEXT,
           ${K.colNameUser["currency"]} TEXT NOT NULL,
           ${K.colNameUser["currencyMode"]} INTEGER NOT NULL,
-          ${K.colNameUser["image"]} TEXT,
           ${K.colNameUser["remoteUID"]} TEXT
         )''');
       await db.execute('''CREATE TABLE ${K.tableNameExp} (

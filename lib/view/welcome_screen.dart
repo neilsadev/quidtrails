@@ -33,8 +33,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 child: Image.asset("assets/images/big_logo.png"),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 80, right: 80, top: 50),
+                padding: const EdgeInsets.only(left: 40, right: 40, top: 50),
                 child: MaterialButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
                   onPressed: () async {
                     bool status =
                         await Provider.of<User>(context, listen: false)
@@ -43,8 +46,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       Map<String, dynamic> row = {
                         K.colNameUser["name"]!:
                             Provider.of<User>(context, listen: false).userName,
-                        K.colNameUser["image"]!: base64Encode(
-                            Provider.of<User>(context, listen: false).image!),
                       };
                       await _dbProvider.update(K.tableNameUser, row);
                       Navigator.popAndPushNamed(context, HomeScreen.id);
@@ -62,8 +63,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           width: 40,
                         ),
                       ),
-                      Text("Sign in with Google"),
-                      SizedBox(),
+                      const Text(
+                        "Sign in with Google",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(),
                     ],
                   ),
                 ),

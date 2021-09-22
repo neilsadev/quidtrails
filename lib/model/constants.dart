@@ -60,7 +60,6 @@ class K {
     "name": "name",
     "currency": "currency",
     "currencyMode": "currency_mode",
-    "image": "image",
     "remoteUID": "remote_uid",
   };
 
