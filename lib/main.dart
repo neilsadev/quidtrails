@@ -2,9 +2,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quidtrails/model/data.dart';
+import 'package:quidtrails/view/add_expense.dart';
 import 'package:quidtrails/view/home_screen.dart';
+import 'package:quidtrails/view/splash_screen.dart';
 import 'package:quidtrails/view/welcome_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'model/user.dart';
 
@@ -22,35 +23,35 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  int? counter;
-
-  @override
-  void initState() {
-    getPrefs();
-    super.initState();
-  }
-
-  getPrefs() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    counter = (prefs.getInt('counter') ?? 0);
-  }
-
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider(create: (_) => User()),
-        Provider(create: (_) => Data()),
+        ChangeNotifierProvider<User>(create: (_) => User()),
+        ChangeNotifierProvider<Data>(create: (_) => Data()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.deepPurple,
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.black,
+            shadowColor: Colors.transparent,
+            titleTextStyle: TextStyle(
+              fontFamily: "Railway",
+              fontWeight: FontWeight.w700,
+              color: Colors.black,
+            ),
+          ),
+          fontFamily: "Railway",
         ),
-        initialRoute: counter == 0 ? WelcomeScreen.id : HomeScreen.id,
+        initialRoute: SplashScreen.id,
         routes: {
-          HomeScreen.id: (context) => const HomeScreen(),
+          SplashScreen.id: (context) => const SplashScreen(),
           WelcomeScreen.id: (context) => const WelcomeScreen(),
+          HomeScreen.id: (context) => const HomeScreen(),
+          AddExpense.id: (context) => const AddExpense(),
         },
       ),
     );
