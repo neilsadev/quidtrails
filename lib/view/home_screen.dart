@@ -1,14 +1,12 @@
-import 'dart:typed_data';
-
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quidtrails/controller/db.dart';
 import 'package:quidtrails/model/constants.dart';
 import 'package:quidtrails/model/data.dart';
 import 'package:quidtrails/model/user.dart';
 import 'package:quidtrails/model/formatter.dart';
 import 'package:quidtrails/view/add_expense.dart';
+import 'package:quidtrails/view/settings_screen.dart';
 import 'package:sticky_grouped_list/sticky_grouped_list.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -20,7 +18,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  dynamic _elements;
+  List<Map<String, dynamic>>? _elements;
+  String dateToday = DateTime.now().toString().split(" ").first;
+  String dateYesterday = DateTime.now()
+      .subtract(const Duration(days: 1))
+      .toString()
+      .split(" ")
+      .first;
 
   @override
   void initState() {
@@ -29,11 +33,20 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   _fetchFromDB() async {
-    dynamic _e =
-        await Provider.of<Data>(context, listen: false).expenseTableData;
+    List<Map<String, dynamic>>? _e =
+        Provider.of<Data>(context, listen: false).expenseTableData;
     setState(() {
       _elements = _e;
     });
+  }
+
+  String _dateBanner(String date) {
+    if (date == dateToday) {
+      return "Today";
+    } else if (date == dateYesterday) {
+      return "Yesterday";
+    }
+    return date;
   }
 
   @override
@@ -58,7 +71,9 @@ class _HomeScreenState extends State<HomeScreen> {
           Padding(
             padding: const EdgeInsets.only(right: 20.0),
             child: GestureDetector(
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(context, SettingsScreen.id);
+              },
               child: const Icon(
                 EvaIcons.settings2Outline,
                 color: K.black,
@@ -69,7 +84,16 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(context, AddExpense.id);
+          if (Provider.of<User>(context, listen: false).thisMonthsBudget !=
+              null) {
+            Navigator.pushNamed(context, AddExpense.id);
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("Please set a budget from settings"),
+              ),
+            );
+          }
         },
         backgroundColor: K.purple,
         child: const Icon(EvaIcons.plus),
@@ -97,13 +121,26 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontSize: 18,
                           ),
                         ),
-                        // Text(Formatter().displayAmount(amount: Provider.of<Data>(context).budgetLeft!,currency: Provider.of<Data>(context).currency!, currencyMode: Provider.of<Data>(context).currencyMode!)),
                         Text(
-                          Formatter()
-                              .displayAmount(amount: 50000, currency: "\$"),
+                          Provider.of<User>(context, listen: false)
+                                      .thisMonthsBudget !=
+                                  null
+                              ? Formatter().displayAmount(
+                                  amount:
+                                      Provider.of<User>(context, listen: false)
+                                          .thisMonthsBudgetLeft!,
+                                  currency:
+                                      Provider.of<User>(context, listen: false)
+                                          .currency!,
+                                  currencyMode:
+                                      Provider.of<User>(context, listen: false)
+                                          .currencyMode!,
+                                )
+                              : "Set budget",
                           style: const TextStyle(
                             color: Colors.white,
-                            fontSize: 28,
+                            fontSize: 36,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ],
@@ -114,24 +151,78 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Expanded(
               child: _elements == null
-                  ? const CircularProgressIndicator(
-                      color: K.purple,
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                        color: K.purple,
+                      ),
                     )
-                  : StickyGroupedListView<dynamic, String>(
-                      elements: _elements,
-                      groupBy: (dynamic element) =>
-                          element[K.colNameExp["dateTime"]],
-                      groupSeparatorBuilder: (dynamic element) =>
-                          Text(element[K.colNameExp["dateTime"]!]),
-                      itemBuilder: (context, dynamic element) =>
-                          Text(element[K.colNameExp["description"]!]),
-                      itemComparator: (element1, element2) =>
-                          element1[K.colNameExp["dateTime"]!].compareTo(
-                              element2[K.colNameExp["dateTime"]!]), // optional
-                      itemScrollController:
-                          GroupedItemScrollController(), // optional
-                      order: StickyGroupedListOrder.ASC, // optional
-                    ),
+                  : _elements!.isEmpty
+                      ? const Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 30.0, horizontal: 80.0),
+                          child: Text(
+                            "Please add a expense to keep track of your budget",
+                            textAlign: TextAlign.center,
+                          ),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: StickyGroupedListView<dynamic, String>(
+                            stickyHeaderBackgroundColor: Colors.white,
+                            elements: _elements!,
+                            groupBy: (dynamic element) =>
+                                element[K.colNameExp["dateTime"]]
+                                    .toString()
+                                    .split(" ")
+                                    .first,
+                            groupSeparatorBuilder: (dynamic element) => Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 5.0),
+                              child: Text(
+                                _dateBanner(element[K.colNameExp["dateTime"]!]
+                                    .toString()
+                                    .split(" ")
+                                    .first),
+                              ),
+                            ),
+                            itemBuilder: (context, dynamic element) => Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 5.0),
+                              child: ListTile(
+                                title: Text(element[K.colNameExp["category"]!]),
+                                subtitle:
+                                    Text(element[K.colNameExp["description"]!]),
+                                trailing: Text(
+                                  Formatter().displayAmount(
+                                    amount: element[K.colNameExp["amount"]!],
+                                    currency: Provider.of<User>(context,
+                                            listen: false)
+                                        .currency!,
+                                    currencyMode: Provider.of<User>(context,
+                                            listen: false)
+                                        .currencyMode!,
+                                  ),
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                tileColor: Colors.grey.shade100,
+                                dense: true,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                              ),
+                            ),
+                            itemComparator: (element1, element2) =>
+                                element1[K.colNameExp["dateTime"]!].compareTo(
+                                    element2[
+                                        K.colNameExp["dateTime"]!]), // optional
+                            itemScrollController:
+                                GroupedItemScrollController(), // optional
+                            order: StickyGroupedListOrder.DESC, // optional
+                          ),
+                        ),
             ),
           ],
         ),

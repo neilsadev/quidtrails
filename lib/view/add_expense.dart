@@ -1,11 +1,9 @@
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:quidtrails/model/constants.dart';
 import 'package:quidtrails/model/data.dart';
 import 'package:quidtrails/model/user.dart';
+import 'package:quidtrails/view/home_screen.dart';
 
 class AddExpense extends StatefulWidget {
   static const String id = "add_expanse";
@@ -16,6 +14,8 @@ class AddExpense extends StatefulWidget {
 }
 
 class _AddExpenseState extends State<AddExpense> {
+  String? amount;
+  String? description;
   String? dropdownValue;
   List<String> expenseFor = K.expenseFor;
 
@@ -49,6 +49,11 @@ class _AddExpenseState extends State<AddExpense> {
                       ),
                     ),
                   ),
+                  onChanged: (value) {
+                    setState(() {
+                      amount = value;
+                    });
+                  },
                 ),
               ),
               Padding(
@@ -81,6 +86,11 @@ class _AddExpenseState extends State<AddExpense> {
                   decoration: const InputDecoration(
                     hintText: "Description",
                   ),
+                  onChanged: (value) {
+                    setState(() {
+                      description = value;
+                    });
+                  },
                 ),
               ),
               Padding(
@@ -88,8 +98,9 @@ class _AddExpenseState extends State<AddExpense> {
                 child: MaterialButton(
                   minWidth: double.infinity,
                   color: K.purple,
-                  onPressed: () {
-                    print("Button Pressed");
+                  onPressed: () async {
+                    await _insertIntoTable();
+                    Navigator.popAndPushNamed(context, HomeScreen.id);
                   },
                   child: const Text(
                     "Add",
@@ -106,5 +117,29 @@ class _AddExpenseState extends State<AddExpense> {
         ),
       ),
     );
+  }
+
+  _insertIntoTable() async {
+    double? expAmount;
+    try {
+      expAmount = double.tryParse(amount!);
+    } catch (e) {
+      rethrow;
+    }
+    if (dropdownValue != null && description != null && expAmount != null) {
+      Map<String, dynamic> row = {
+        K.colNameExp["category"]!: dropdownValue,
+        K.colNameExp["description"]!: description,
+        K.colNameExp["amount"]!: double.tryParse(amount!),
+        K.colNameExp["dateTime"]!: DateTime.now().toString()
+      };
+      try {
+        await Provider.of<Data>(context, listen: false)
+            .insertIntoExpenseTable(row);
+      } catch (e) {
+        rethrow;
+      }
+      await Provider.of<Data>(context, listen: false).fetchExpenseTableData();
+    }
   }
 }

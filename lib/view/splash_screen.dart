@@ -1,7 +1,7 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quidtrails/controller/db.dart';
+import 'package:quidtrails/model/constants.dart';
 import 'package:quidtrails/model/data.dart';
 import 'package:quidtrails/model/user.dart';
 import 'package:quidtrails/view/home_screen.dart';
@@ -26,14 +26,16 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return AnimatedSplashScreen.withScreenFunction(
-      splash: 'assets/images/app_logo.png',
+      backgroundColor: K.purple,
+      splash: 'assets/images/white_logo.png',
+      splashIconSize: 150,
       screenFunction: () async {
         int counter = await getPrefs();
         await Provider.of<User>(context, listen: false).fetchUserDataFromDB();
         await Provider.of<Data>(context, listen: false).fetchExpenseTableData();
         return counter == 0 ? const WelcomeScreen() : const HomeScreen();
       },
-      splashTransition: SplashTransition.rotationTransition,
+      splashTransition: SplashTransition.fadeTransition,
       pageTransitionType: PageTransitionType.rightToLeftWithFade,
     );
   }

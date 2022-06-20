@@ -15,21 +15,15 @@ class Data extends ChangeNotifier {
   int? get budgetLeft => _budgetLeft;
   int? get localTs => _localTs;
   int? get dbTs => _dbTs;
-  dynamic get expenseTableData => _expenseTableData;
+  List<Map<String, dynamic>>? get expenseTableData => _expenseTableData;
 
   updateLocalTimeStamp() async {
-    int rowAffected = await _dbProvider.update(K.tableNameDBSync,
+    await _dbProvider.update(K.tableNameDBSync,
         {K.colNameDBSync["localTs"]!: DateTime.now().millisecondsSinceEpoch});
-    if (rowAffected != 1) {
-      print("Something went wrong");
-    }
   }
 
   insertIntoExpenseTable(Map<String, dynamic> row) async {
-    int rowAffected = await _dbProvider.insert(K.tableNameExp, row);
-    if (rowAffected != 1) {
-      print("Something went wrong when inserting to expense");
-    }
+    await _dbProvider.insert(K.tableNameExp, row);
     updateLocalTimeStamp();
   }
 

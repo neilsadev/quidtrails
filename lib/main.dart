@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:quidtrails/model/data.dart';
 import 'package:quidtrails/view/add_expense.dart';
 import 'package:quidtrails/view/home_screen.dart';
+import 'package:quidtrails/view/settings_screen.dart';
 import 'package:quidtrails/view/splash_screen.dart';
 import 'package:quidtrails/view/welcome_screen.dart';
 
@@ -31,7 +32,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider<Data>(create: (_) => Data()),
       ],
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Quidtrails',
         theme: ThemeData(
           primarySwatch: Colors.deepPurple,
           appBarTheme: const AppBarTheme(
@@ -52,6 +53,7 @@ class _MyAppState extends State<MyApp> {
           WelcomeScreen.id: (context) => const WelcomeScreen(),
           HomeScreen.id: (context) => const HomeScreen(),
           AddExpense.id: (context) => const AddExpense(),
+          SettingsScreen.id: (context) => const SettingsScreen(),
         },
       ),
     );

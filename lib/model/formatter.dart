@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class Formatter {
   RegExp commaNumberRegEx = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
 
@@ -28,5 +30,11 @@ class Formatter {
         break;
     }
     return returnStr;
+  }
+
+  String formattedDate(DateTime dateTime) {
+    DateFormat formatter = DateFormat('yyyy-MM');
+    String formatted = formatter.format(dateTime);
+    return formatted;
   }
 }

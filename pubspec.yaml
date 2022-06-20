@@ -41,9 +41,9 @@ dependencies:
   animated_splash_screen: ^1.1.0
   eva_icons_flutter: ^3.0.2
   sticky_grouped_list: ^2.0.0-nullsafety.2
+  intl: ^0.17.0
 
 dev_dependencies:
-  flutter_native_splash: ^1.2.3
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
